@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taiwan's Trade Story</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Casual, modern design */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding-bottom: 30px;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #003366, #004080);
+            padding: 30px 40px;
+            text-align: center;
+            border-bottom: 8px solid #FF6600;
+        }
+        
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #FFCC00;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .highlight-box {
+            background: #FF6600;
+            color: white;
+            padding: 25px;
+            margin: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(255, 102, 0, 0.3);
+        }
+        
+        .highlight-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .surplus-number {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin: 15px 0;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .surplus-subtext {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 0 30px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border-left: 6px solid #004080;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            color: #003366;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: #FF6600;
+        }
+        
+        .item-list {
+            list-style: none;
+        }
+        
+        .item-list li {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .item-list li i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            color: #004080;
+        }
+        
+        .imports .card-title {
+            border-left: 6px solid #2196F3;
+            padding-left: 15px;
+        }
+        
+        .exports .card-title {
+            border-left: 6px solid #4CAF50;
+            padding-left: 15px;
+        }
+        
+        .imports .item-list li {
+            border-left: 4px solid #2196F3;
+        }
+        
+        .exports .item-list li {
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .chart-section {
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .chart-title {
+            font-size: 2rem;
+            color: #003366;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        .fun-facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 0 30px;
+            margin-top: 40px;
+        }
+        
+        .fact-box {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-top: 6px solid #FF6600;
+        }
+        
+        .fact-icon {
+            font-size: 2.5rem;
+            color: #004080;
+            margin-bottom: 15px;
+        }
+        
+        .fact-title {
+            font-size: 1.3rem;
+            color: #003366;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .emoji {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #FFCC00 0%, #FFCC00 100%);
+            background-position: 0 90%;
+            background-repeat: no-repeat;
+            background-size: 100% 0.3em;
+            padding: 0 3px;
+        }
+        
+        @media (max-width: 900px) {
+            .content-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-title {
+                font-size: 2.8rem;
+            }
+            
+            .surplus-number {
+                font-size: 3.5rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .main-title {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .highlight-box {
+                margin: 20px 15px;
+                padding: 20px;
+            }
+            
+            .content-section, .chart-section, .fun-facts {
+                padding: 0 15px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="main-title">Taiwan's Trade Story</h1>
+            <div class="subtitle">How a tiny island powers the world's tech</div>
+            <p class="tagline">With a massive $81 billion trade surplus, Taiwan punches way above its weight in the global economy. Let's explore how they do it.</p>
+        </header>
+        
+        <!-- Big Highlight -->
+        <div class="highlight-box">
+            <div class="highlight-title">💰 Taiwan's Trade Surplus</div>
+            <div class="surplus-number">$81 Billion</div>
+            <p class="surplus-subtext">That's like finding money in your pocket every year! They export way more than they import.</p>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="content-section">
+            <div class="card imports">
+                <h2 class="card-title"><i class="fas fa-shopping-cart"></i> What They Buy</h2>
+                <p class="card-subtitle">Taiwan needs these to keep their factories humming:</p>
+                <ul class="item-list">
+                    <li><i class="fas fa-gas-pump"></i> <strong>Energy</strong> - Oil, gas, coal (they import 98% of their energy!)</li>
+                    <li><i class="fas fa-industry"></i> <strong>Factory Machines</strong> - High-tech equipment</li>
+                    <li><i class="fas fa-car"></i> <strong>Cars & Parts</strong> - For getting around the island</li>
+                    <li><i class="fas fa-prescription-bottle"></i> <strong>Medicine</strong> - Keeping everyone healthy</li>
+                    <li><i class="fas fa-seedling"></i> <strong>Food</strong> - Soybeans, corn, beef</li>
+                </ul>
+            </div>
+            
+            <div class="card exports">
+                <h2 class="card-title"><i class="fas fa-rocket"></i> What They Sell to the World</h2>
+                <p class="card-subtitle">This is where Taiwan really shines:</p>
+                <ul class="item-list">
+                    <li><i class="fas fa-microchip"></i> <strong>Computer Chips</strong> - 34.7% of all exports! 📱</li>
+                    <li><i class="fas fa-laptop"></i> <strong>Computers & Phones</strong> - All the tech gadgets</li>
+                    <li><i class="fas fa-tools"></i> <strong>Precision Tools</strong> - Super accurate machinery</li>
+                    <li><i class="fas fa-flask"></i> <strong>Plastics & Chemicals</strong> - For making stuff</li>
+                    <li><i class="fas fa-cogs"></i> <strong>Steel Products</strong> - Building materials</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- The Chip Story -->
+        <div class="chart-section">
+            <h2 class="chart-title">🚀 The Chip Superpower</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 30px; font-size: 1.2rem; line-height: 1.6;">
+                Here's the secret: <span class="highlight">Taiwan makes over 60% of the world's semiconductors</span> and 
+                <span class="highlight">90% of the most advanced chips</span>. Your phone, laptop, and car probably have Taiwan-made chips inside!
+            </p>
+            
+            <div class="chart-container">
+                <canvas id="chipChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Fun Facts -->
+        <div class="fun-facts">
+            <div class="fact-box">
+                <div class="fact-icon">📈</div>
+                <h3 class="fact-title">Growth Spurt</h3>
+                <p>Since COVID, Taiwan's trade grew by about <strong>10% each year</strong>. The AI boom = more chip sales!</p>
+            </div>
+            
+            <div class="fact-box">
+                <div class="fact-icon">🤖</div>
+                <h3 class="fact-title">AI's Best Friend</h3>
+                <p>Every AI company needs Taiwan's chips. No Taiwan chips = slower AI progress worldwide.</p>
+            </div>
+            
+            <div class="fact-box">
+                <div class="fact-icon">🏭</div>
+                <h3 class="fact-title">Factory Magic</h3>
+                <p>They turn imported energy and materials into world-class tech. It's like cooking with basic ingredients to make a gourmet meal!</p>
+            </div>
+            
+            <div class="fact-box">
+                <div class="fact-icon">🌏</div>
+                <h3 class="fact-title">Global Player</h3>
+                <p>Despite being small, Taiwan's tech keeps the world running. Supply chain problems? Everyone feels it.</p>
+            </div>
+        </div>
+        
+        <!-- Trade Trend -->
+        <div class="chart-section" style="margin-top: 20px;">
+            <h2 class="chart-title">📊 The Trade Trend (2014-2024)</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 30px; font-size: 1.2rem; line-height: 1.6;">
+                Taiwan's exports have been climbing steadily. Even during global slowdowns, their tech keeps selling!
+            </p>
+            
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Bottom Line -->
+        <div class="highlight-box" style="background: #004080; margin-top: 40px;">
+            <div class="highlight-title">🎯 The Bottom Line</div>
+            <p style="font-size: 1.4rem; margin-top: 15px;">
+                Taiwan's trade success comes from <span class="highlight">focusing on what they do best</span>: making the world's best chips and tech products. 
+                They've turned a lack of natural resources into a strength by becoming indispensable to the global tech industry.
+            </p>
+        </div>
+        
+        <footer class="footer">
+            <p>Made with 💻 and 📊 | Taiwan Trade Data 2024</p>
+            <p>Sources: IMF, World Bank, Taiwan Ministry of Finance</p>
+        </footer>
+    </div>
+
+    <script>
+        // Chip Dominance Chart
+        const chipCtx = document.getElementById('chipChart').getContext('2d');
+        const chipChart = new Chart(chipCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Taiwan', 'South Korea', 'USA', 'Japan', 'China', 'Europe'],
+                datasets: [{
+                    label: 'Share of Global Semiconductor Production',
+                    data: [62, 18, 12, 3, 3, 2],
+                    backgroundColor: [
+                        '#FF6600',
+                        '#003366',
+                        '#4CAF50',
+                        '#2196F3',
+                        '#9C27B0',
+                        '#757575'
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Taiwan Dominates Chip Making',
+                        font: {
+                            size: 18,
+                            weight: 'bold'
+                        },
+                        color: '#003366'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Percentage (%)',
+                            font: {
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        const trendChart = new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['2014', '2016', '2018', '2020', '2022', '2024'],
+                datasets: [{
+                    label: 'Exports (USD Billions)',
+                    data: [310, 280, 336, 380, 460, 510],
+                    borderColor: '#FF6600',
+                    backgroundColor: 'rgba(255, 102, 0, 0.1)',
+                    borderWidth: 4,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#FF6600',
+                    pointRadius: 6
+                },
+                {
+                    label: 'Trade Surplus (USD Billions)',
+                    data: [40, 45, 49, 55, 75, 85],
+                    borderColor: '#004080',
+                    backgroundColor: 'rgba(0, 64, 128, 0.1)',
+                    borderWidth: 4,
+                    fill: true,
+                    tension: 0.4,
+                    borderDash: [5, 5],
+                    pointBackgroundColor: '#004080',
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'USD Billions',
+                            font: {
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Add some interactivity
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+        
+        // Add emoji to some list items
+        document.querySelectorAll('.item-list li').forEach(item => {
+            if (item.textContent.includes('Chips') || item.textContent.includes('chips')) {
+                item.innerHTML += ' 🚀';
+            }
+            if (item.textContent.includes('Energy')) {
+                item.innerHTML += ' ⚡';
+            }
+            if (item.textContent.includes('Food')) {
+                item.innerHTML += ' 🍚';
+            }
+        });
+    </script>
+</body>
+</html>
